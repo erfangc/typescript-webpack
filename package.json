@@ -1,0 +1,17 @@
+{
+  "name": "generator-typescript-webpack",
+  "dependencies": {
+    "yeoman-generator": "^0.21.1",
+    "chalk": "^1.0.0",
+    "yosay": "^1.0.2"
+  },
+  "files": [
+    "generators/app"
+  ],
+  "devDependencies": {
+    "yeoman-assert": "^2.0.0"
+  },
+  "keywords": [
+    "yeoman-generator"
+  ]
+}
