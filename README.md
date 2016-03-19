@@ -2,6 +2,13 @@
 
 ## Installing
 
+First install the generator from npm
+
+```bash
+npm install generator-typescript-webpack -g
+# append 'sudo' for Debian distro
+```
+
 ```bash
 mkdir -p <app-name> && cd <app-name> && yo typescript-webpack
 ```
