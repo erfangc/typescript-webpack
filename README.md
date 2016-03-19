@@ -34,3 +34,6 @@ We don't want to separate the `edit/browser refresh` cycle to be different from 
 ## TODOs
  - Make the generator agnostic to the underlying testing framework (allow users to use mocha or jest)
  - Out of the box `sourcemap` support
+ - Support for other layouts
+ - Optional dependency on phantomjs or Chrome for karma
+ - Accept CLI args
