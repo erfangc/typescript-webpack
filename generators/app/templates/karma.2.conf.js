@@ -4,7 +4,7 @@ delete webpackConfig.entry; // no need for entry, test files are the entry point
 module.exports = function (config) {
     config.set({
 
-        frameworks: ['jasmine'],
+        frameworks: ['<%- testFramework %>'],
 
         files: [
             // all files ending in "_test"
@@ -21,6 +21,6 @@ module.exports = function (config) {
 
         webpack: webpackConfig,
 
-        browsers: ["Chrome"]
+        browsers: ["<%- browserFriendlyName %>"]
     });
 };

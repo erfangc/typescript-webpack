@@ -17,10 +17,28 @@ module.exports = yeoman.generators.Base.extend({
             name: 'appname',
             message: 'Enter a name for your App',
             default: _.kebabCase(this.appname)
+        }, {
+            type: 'list',
+            name: 'testFramework',
+            message: 'Choose a testing framework',
+            choices: ['mocha', 'jasmine'],
+            default: 'mocha'
+        }, {
+            type: 'list',
+            name: 'browser',
+            message: 'Choose a browser for Karma',
+            choices: ['chrome', 'phantomjs'],
+            default: 'phantomjs'
         }];
 
         this.prompt(prompts, function (props) {
             this.props = props;
+            // resolve Karma browsers name
+            if (props.browser === 'phantomjs')
+                this.props.browserFriendlyName = 'PhantomJS';
+            else
+                this.props.browserFriendlyName = 'Chrome';
+
             done();
         }.bind(this));
     },
@@ -31,9 +49,10 @@ module.exports = yeoman.generators.Base.extend({
             this.destinationPath('package.json'),
             this.props
         );
-        this.fs.copy(
+        this.fs.copyTpl(
             this.templatePath('*.js'),
-            this.destinationRoot()
+            this.destinationRoot(),
+            this.props
         );
         this.fs.copy(
             this.templatePath('typings.json'),
@@ -44,15 +63,26 @@ module.exports = yeoman.generators.Base.extend({
             this.destinationPath('src/index.ts')
         );
         this.fs.copy(
-            this.templatePath('test/jasmine/index.spec.ts'),
+            this.templatePath(`test/${this.props.testFramework}/index.spec.ts`),
             this.destinationPath('test/index.spec.ts')
         );
     },
 
     install: function () {
-        var devDependencies = ["jasmine", "karma-jasmine", "karma", "karma-chrome-launcher", "karma-webpack", "ts-loader", "typescript", "typings", "webpack"];
+
+        var dependencies = ["lodash"];
+        var devDependencies = [`${this.props.testFramework}`, `karma-${this.props.testFramework}`, "karma", "karma-webpack", "ts-loader", "typescript", "typings", "webpack"];
+        if (this.props.browser === "phantomjs") {
+            devDependencies.push("phantomjs");
+            devDependencies.push("karma-phantomjs-launcher@0.2.3")
+        } else
+            devDependencies.push("karma-chrome-launcher");
+
         this.npmInstall(devDependencies, {"saveDev": true});
+        this.npmInstall(dependencies, {"save": true});
         this.installDependencies();
-        this.spawnCommand('typings', ['install']);
+
+        this.spawnCommand('typings', ['install', 'lodash', this.props.testFramework, '--save', '--ambient']);
+
     }
 });
